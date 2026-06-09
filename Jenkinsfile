@@ -10,21 +10,11 @@ pipeline {
             }
         }
 
-        stage('Mostrar archivos') {
+        stage('Validar estructura') {
             steps {
                 sh 'ls -la'
-            }
-        }
-
-        stage('Build Docker') {
-            steps {
-                sh 'docker compose build'
-            }
-        }
-
-        stage('Deploy Docker') {
-            steps {
-                sh 'docker compose up -d'
+                sh 'test -f docker-compose.yml'
+                sh 'test -f backend/app.py'
             }
         }
 
@@ -35,9 +25,11 @@ pipeline {
                 '''
             }
         }
+
     }
 
     post {
+
         success {
             echo 'Pipeline ejecutado correctamente'
         }
@@ -45,5 +37,6 @@ pipeline {
         failure {
             echo 'Pipeline falló'
         }
+
     }
 }
